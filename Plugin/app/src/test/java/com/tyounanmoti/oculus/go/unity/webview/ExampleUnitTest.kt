@@ -1,4 +1,4 @@
-package com.tyounanmoti.oculus.go.webview
+package com.tyounanmoti.oculus.go.unity.webview
 
 import org.junit.Test
 
