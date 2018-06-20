@@ -5,7 +5,7 @@
 
 JavaVM* jvm;
 std::unique_ptr<debug> g_debug;
-jclass update_texture_class;
+jclass webview_class;
 jmethodID update_method;
 
 extern "C" {
@@ -20,19 +20,19 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     JNIEnv* env = nullptr;
     vm->AttachCurrentThread(&env, nullptr);
 
-    update_texture_class = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/tyounanmoti/oculus/go/unity/webview/UpdateTextureKt")));
-    update_method = env->GetStaticMethodID(update_texture_class, "Update", "(I)V");
+    webview_class = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/tyounanmoti/oculus/go/unity/webview/UnityWebView")));
+    update_method = env->GetMethodID(webview_class, "update", "()V");
 
     return JNI_VERSION_1_6;
 }
 
-void update_texture(int event_id) {
+void update_texture(int event_id, void* webview) {
     JNIEnv* env;
     jvm->AttachCurrentThread(&env, nullptr);
-    env->CallStaticVoidMethod(update_texture_class, update_method, event_id);
+    env->CallVoidMethod(reinterpret_cast<jobject>(webview), update_method);
 }
 
-UnityRenderingEvent get_update_texture_func() {
+UnityRenderingEventAndData get_update_texture_func() {
     return update_texture;
 }
 
